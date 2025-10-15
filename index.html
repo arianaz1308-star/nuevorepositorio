@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mobile Store App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-purple: #8b5cf6;
+            --secondary-purple: #a855f7;
+            --accent-purple: #c084fc;
+            --light-purple: #e879f9;
+            --dark-purple: #6b21a8;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-primary: rgba(139, 92, 246, 0.4);
+            --text-white: #ffffff;
+            --gradient-main: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #c084fc 50%, #d946ef 75%, #e879f9 100%);
+            --font-primary: 'Poppins', sans-serif;
+            --font-accent: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: #f0f0f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 375px;
+            height: 812px;
+            position: relative;
+            background: var(--gradient-main);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px var(--shadow-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Barra de navegación superior */
+        .nav-bar {
+            position: relative;
+            z-index: 100;
+            background: rgba(45, 27, 78, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 12px;
+        }
+
+        .nav-item:hover {
+            color: var(--light-purple);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: rgba(232, 121, 249, 0.3);
+            box-shadow: 0 5px 15px rgba(232, 121, 249, 0.4);
+        }
+
+        /* Contenedor de páginas */
+        .pages-container {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .page.exit-left {
+            transform: translateX(-100%);
+        }
+
+        /* Elementos decorativos */
+        .bg-decoration {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .bg-circle-1 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            top: -50px;
+            left: -50px;
+        }
+
+        .bg-circle-2 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%);
+            top: 100px;
+            right: -30px;
+            animation-delay: -3s;
+        }
+
+        /* PÁGINA 1: WELCOME */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 30px;
+            height: 100%;
+            position: relative;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 50px;
+        }
+
+        .welcome-text h1 {
+            color: white;
+            font-size: 48px;
+            font-weight: 300;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .welcome-text .store-text {
+            font-weight: 600;
+        }
+
+        .image-container {
+            width: 200px;
+            height: 200px;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 60px;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+            animation: floatImage 6s ease-in-out infinite;
+        }
+
+        @keyframes floatImage {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .mountains {
+            position: relative;
+            width: 120px;
+            height: 80px;
+        }
+
+        .mountain {
+            position: absolute;
+            background: #2d1b4e;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .mountain-1 {
+            width: 60px;
+            height: 50px;
+            left: 0;
+            top: 30px;
+            background: #1a0f2e;
+        }
+
+        .mountain-2 {
+            width: 70px;
+            height: 60px;
+            left: 35px;
+            top: 20px;
+            background: #2d1b4e;
+        }
+
+        .mountain-3 {
+            width: 50px;
+            height: 45px;
+            left: 70px;
+            top: 35px;
+            background: #0f0820;
+        }
+
+        .shop-button {
+            background: rgba(45, 27, 78, 0.9);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 18px 60px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+            text-transform: uppercase;
+        }
+
+        .shop-button:hover {
+            background: rgba(45, 27, 78, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(45, 27, 78, 0.4);
+        }
+
+        /* PÁGINA 2: PROFILE */
+        .avatar-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-container:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar-icon {
+            font-size: 48px;
+            color: rgba(45, 27, 78, 0.8);
+        }
+
+        .user-name {
+            font-family: var(--font-accent);
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            margin-bottom: 50px;
+        }
+
+        .progress-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 60px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+        }
+
+        .circular-progress {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from -90deg,
+                var(--light-purple) 0deg,
+                var(--light-purple) var(--progress-deg, 270deg),
+                rgba(255, 255, 255, 0.2) var(--progress-deg, 270deg)
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-main);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-text {
+            position: absolute;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            z-index: 1;
+        }
+
+        /* PÁGINA 3: OPTIONS */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px 0 40px;
+            padding: 15px 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover {
+            transform: scale(1.3);
+        }
+
+        .dot.active {
+            background: var(--light-purple);
+            transform: scale(1.4);
+            box-shadow: 0 0 20px rgba(232, 121, 249, 0.6);
+        }
+
+        .options-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0 30px;
+            margin-bottom: 40px;
+        }
+
+        .option-button {
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 20px 30px;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .option-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Home icon bottom */
+        .home-icon-container {
+            width: 70px;
+            height: 70px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 50%;
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .home-icon-container:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .home-icon {
+            font-size: 28px;
+            color: rgba(45, 27, 78, 0.8);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-container {
+                max-height: 100vh;
+                border-radius: 30px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .welcome-text h1 {
+                font-size: 36px;
+            }
+            
+            .shop-button {
+                font-size: 20px;
+                padding: 16px 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Barra de navegación -->
+        <div class="nav-bar">
+            <div class="nav-item active" onclick="changePage(0)" title="Welcome">
+                <i class="fas fa-store"></i>
+            </div>
+            <div class="nav-item" onclick="changePage(1)" title="Profile">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="nav-item" onclick="changePage(2)" title="Options">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+
+        <!-- Contenedor de páginas -->
+        <div class="pages-container">
+            <!-- PÁGINA 1: WELCOME -->
+            <div class="page active" id="page-0">
+                <div class="bg-decoration bg-circle-1"></div>
+                <div class="bg-decoration bg-circle-2"></div>
+                
+                <div class="content">
+                    <div class="welcome-text">
+                        <h1>welcome to<br><span class="store-text">my store</span></h1>
+                    </div>
+                    
+                    <div class="image-container">
+                        <div class="mountains">
+                            <div class="mountain mountain-1"></div>
+                            <div class="mountain mountain-2"></div>
+                            <div class="mountain mountain-3"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="shop-button" onclick="changePage(2)">
+                        SHOP
+                    </button>
+                    
+                    <div class="home-icon-container" onclick="changePage(0)">
+                        <i class="fas fa-home home-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA 2: PROFILE -->
+            <div class="page" id="page-1">
+                <div class="bg-decoration bg-circle-1"></div>
+                <div class="bg-decoration bg-circle-2"></div>
+                
+                <div class="content">
+                    <div class="avatar-container" onclick="changeAvatar()">
+                        <i class="fas fa-user avatar-icon" id="avatarIcon"></i>
+                    </div>
+                    
+                    <div class="user-name" contenteditable="true" id="userName">YOUR NAME</div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-container">
+                            <div class="circular-progress" onclick="animateProgress(this, 75)">
+                                <div class="progress-circle" style="--progress-deg: 270deg;">
+                                    <span class="progress-text">75%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="circular-progress" onclick="animateProgress(this, 85)">
+                                <div class="progress-circle" style="--progress-deg: 306deg;">
+                                    <span class="progress-text">85%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="home-icon-container" onclick="changePage(0)">
+                        <i class="fas fa-home home-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA 3: OPTIONS -->
+            <div class="page" id="page-2">
+                <div class="bg-decoration bg-circle-1"></div>
+                <div class="bg-decoration bg-circle-2"></div>
+                
+                <div class="content">
+                    <div class="image-container" style="width: 240px; height: 160px; margin-top: 20px;">
+                        <div class="mountains" id="mountainsRotate">
+                            <div class="mountain mountain-1"></div>
+                            <div class="mountain mountain-2"></div>
+                            <div class="mountain mountain-3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination">
+                        <div class="dot" onclick="selectDot(this)"></div>
+                        <div class="dot" onclick="selectDot(this)"></div>
+                        <div class="dot" onclick="selectDot(this)"></div>
+                        <div class="dot active" onclick="selectDot(this)"></div>
+                        <div class="dot" onclick="selectDot(this)"></div>
+                    </div>
+                    
+                    <div class="options-container">
+                        <button class="option-button" onclick="selectOption(1)">OPCION 01</button>
+                        <button class="option-button" onclick="selectOption(2)">OPCION 02</button>
+                        <button class="option-button" onclick="selectOption(3)">OPCION 03</button>
+                    </div>
+                    
+                    <div class="home-icon-container" onclick="changePage(0)">
+                        <i class="fas fa-home home-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+
+        // Cambiar entre páginas
+        function changePage(pageIndex) {
+            const pages = document.querySelectorAll('.page');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            pages[currentPage].classList.remove('active');
+            pages[currentPage].classList.add('exit-left');
+            
+            setTimeout(() => {
+                pages[currentPage].classList.remove('exit-left');
+            }, 500);
+            
+            pages[pageIndex].classList.add('active');
+            
+            navItems.forEach(item => item.classList.remove('active'));
+            navItems[pageIndex].classList.add('active');
+            
+            currentPage = pageIndex;
+        }
+
+        // Cambiar avatar
+        function changeAvatar() {
+            const avatarIcon = document.getElementById('avatarIcon');
+            const icons = ['fa-user', 'fa-user-tie', 'fa-user-graduate', 'fa-user-astronaut', 'fa-user-ninja'];
+            const currentClass = icons.find(cls => avatarIcon.classList.contains(cls));
+            const currentIndex = icons.indexOf(currentClass);
+            const nextIndex = (currentIndex + 1) % icons.length;
+            
+            avatarIcon.className = `fas ${icons[nextIndex]} avatar-icon`;
+        }
+
+        // Animar progreso
+        function animateProgress(element, targetProgress) {
+            const progressText = element.querySelector('.progress-text');
+            const progressCircle = element.querySelector('.progress-circle');
+            let currentProgress = 0;
+            
+            const interval = setInterval(() => {
+                currentProgress += 2;
+                if (currentProgress >= targetProgress) {
+                    currentProgress = targetProgress;
+                    clearInterval(interval);
+                }
+                
+                const degrees = (currentProgress / 100) * 360;
+                progressCircle.style.setProperty('--progress-deg', degrees + 'deg');
+                progressText.textContent = Math.round(currentProgress) + '%';
+            }, 20);
+        }
+
+        // Seleccionar dot
+        function selectDot(dot) {
+            document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+        }
+
+        // Seleccionar opción
+        function selectOption(num) {
+            console.log(`Opción ${num} seleccionada`);
+        }
+
+        // Rotar montañas en página 3
+        let rotation = 0;
+        document.getElementById('mountainsRotate')?.addEventListener('click', function() {
+            rotation += 45;
+            this.style.transform = `rotate(${rotation}deg)`;
+        });
+    </script>
+</body>
+</html>
